@@ -41,7 +41,6 @@ func main() {
 		c.String(http.StatusOK, "firstname:%s, lastname:%s, firstnameArr:%#v, qs:%#v,  fnameFromUrlQuery:%#v names: %#v, ids2:%#v", fname, lname, fnameArr, qs, fnameFromUrlQuery, ids, names)
 	})
 
-
 	// test post 与get查询方法名几乎一致
 	r.POST("/form", func(c *gin.Context) {
 		name := c.PostForm("name")
