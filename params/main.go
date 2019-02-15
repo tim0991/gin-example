@@ -24,13 +24,29 @@ func main() {
 	})
 
 	// test query string
-	// url /welcome?firstname=Jane&lastname=Doe
+	// localhost:3000/welcome?firstname=Jane&lastname=Doe&ids[]=1&ids[]=2&names[a]=tim&names[b]=wang
 	r.GET("/welcome", func(c *gin.Context) {
 		// 下面两个都是通过getQuery实现
 		fname := c.Query("firstname")
+		// alias of Query
 		lname := c.DefaultQuery("lastname", "tim")
-		queryArr, _ := c.GetQueryArray("firstname")
-		c.String(http.StatusOK,"%s %s %#v", fname, lname, queryArr)
+
+		fnameArr, _ := c.GetQueryArray("firstname")
+		ids := c.QueryArray("ids[]")
+		names := c.QueryMap("names")
+		// 和query结果一致
+		qs := c.Request.URL.Query()
+		fnameFromUrlQuery := qs.Get("firstname")
+
+		c.String(http.StatusOK, "firstname:%s, lastname:%s, firstnameArr:%#v, qs:%#v,  fnameFromUrlQuery:%#v names: %#v, ids2:%#v", fname, lname, fnameArr, qs, fnameFromUrlQuery, ids, names)
+	})
+
+
+	// test post 与get查询方法名几乎一致
+	r.POST("/form", func(c *gin.Context) {
+		name := c.PostForm("name")
+		// c.PostFormArray(key string)
+		c.String(http.StatusOK, name)
 	})
 
 	r.Run(":3000")
